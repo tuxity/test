@@ -27,5 +27,5 @@ jobs:
     steps:
       - run: echo ${{ needs.job1.result }}
       - run: echo ${{ needs.job2.result }}
-      - run: echo ${{ fromJSON(needs.*.result) }}
+      - run: echo ${{ toJSON(needs.*.result) }}
       - run: echo "job3 run"
