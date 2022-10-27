@@ -26,7 +26,19 @@ jobs:
     needs: [build, deploy]
     if: always()
     steps:
+      - name: status
+        id: status
+        run: |
+          if [ ${{ contains(needs.build.result, 'failure') || contains(needs.build.result, 'cancelled') || contains(needs.build.result, 'skipped') }} == true ]; then
+            echo "STATUS=failed" >> $GITHUB_OUTPUT
+          fi
+          if [ ${{ contains(needs.deploy.result, 'failure') || contains(needs.deploy.result, 'cancelled') || contains(needs.deploy.result, 'skipped') }} == true ]; then
+            echo "STATUS=terminal" >> $GITHUB_OUTPUT
+          fi
+          echo "STATUS=success" >> $GITHUB_OUTPUT
+
       - run: echo ${{ needs.build.result }}
       - run: echo ${{ needs.deploy.result }}
       - run: echo ${{ needs.deploy.result || needs.build.result }}
+      - run: echo ${{ steps.status.outputs.status }}
       - run: echo "notify run"
