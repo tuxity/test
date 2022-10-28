@@ -29,11 +29,14 @@ jobs:
       - name: status
         id: status
         run: |
-          if [ ${{ contains(needs.build.result, 'failure') || contains(needs.build.result, 'cancelled') || contains(needs.build.result, 'skipped') }} == true ]; then
+          BUILD_FAILED=${{ contains(needs.build.result, 'failure') || contains(needs.build.result, 'cancelled') || contains(needs.build.result, 'skipped') }}
+          DEPLOY_FAILED=${{ contains(needs.deploy.result, 'failure') || contains(needs.deploy.result, 'cancelled') || contains(needs.deploy.result, 'skipped') }}
+
+          echo "STATUS=succeded" >> $GITHUB_OUTPUT
+          if [ $BUILD_FAILED == true ]; then
             echo "STATUS=failed" >> $GITHUB_OUTPUT
-          elif [ ${{ contains(needs.deploy.result, 'failure') || contains(needs.deploy.result, 'cancelled') || contains(needs.deploy.result, 'skipped') }} == true ]; then
+          elif [ $DEPLOY_FAILED == true ]; then
             echo "STATUS=terminal" >> $GITHUB_OUTPUT
-          else
-            echo "STATUS=success" >> $GITHUB_OUTPUT
           fi
+
       - run: echo ${{ steps.status.outputs.status }}
