@@ -1,18 +1,17 @@
-name: Test CI
+name: Dispatch CI
 
 on:
   workflow_dispatch:
     inputs:
-      s3-bucket-name:
-        description: "Bucket name"
+      myorg:
+        description: "Org name"
+        default: "myorg"
+      myapp:
+        description: "App name"
         default: "myapp"
-      var1:
-        description: "Variable 1"
-        required: true
-        default: 'bitso-stage-${{ inputs.s3-bucket-name }}' 
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - run: echo ${{ inputs.var1 }}
+      - run: echo ${{ format('{0}-{1}-{2}', inputs.myorg, 'stage', inputs.myapp) }}
