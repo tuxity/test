@@ -9,9 +9,12 @@ on:
       myapp:
         description: "App name"
         default: "myapp"
+      template:
+        description: "template to use"
+        default: '{0}-{1}-{2}'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - run: echo ${{ format('{0}-{1}-{2}', inputs.myorg, 'stage', inputs.myapp) }}
+      - run: echo ${{ format(inputs.template, inputs.myorg, 'stage', inputs.myapp) }}
