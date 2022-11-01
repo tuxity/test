@@ -1,0 +1,23 @@
+name: Matrix tests
+
+on: push
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - id: set-matrix
+        run: echo "matrix=[{\"os\":\"windows-latest\",\"node\":\"16\",\"npm\":\"6\"}]" >> $GITHUB_OUTPUT
+
+  job2:
+    needs: job1
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+        node: [12, 14, 16]
+        include: ${{ fromJSON(needs.job1.outputs.matrix) }}
+    steps:
+      - run: echo ${{ fromJSON(needs.job1.outputs.matrix) }}
