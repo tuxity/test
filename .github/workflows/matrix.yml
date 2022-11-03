@@ -15,7 +15,7 @@ jobs:
       environments: ${{ steps.get-envs.outputs.environments }}
       cloudfront-ids: ${{ steps.cloudfront-ids-env.outputs.cloudfront-ids }}
     steps:
-      - name: Concat Cloudfront ids
+      - name: Ennvironment
         id: get-envs
         run: |
           JSON=$(echo '[{"environment": "sandbox", "parm1": "aaaaa"}, {"environment": "prod", "param1": "bbbbbb"}]')
@@ -37,8 +37,14 @@ jobs:
         environments: ${{ fromJson(needs.build-matrix.outputs.environments) }}
         includes: ${{ fromJson(needs.build-matrix.outputs.cloudfront-ids) }}
     steps:
-      - name: Check ${{ matrix.cloudfront-id }} ${{ matrix.cloudfront-id }}
+      - name: Check 1 ${{ matrix.environment}} ${{ matrix.cloudfront-id }}
         run: |
           matrix='${{ needs.build-matrix.outputs.environments }}'
+          echo $matrix
+          echo $matrix | jq .
+
+      - name: Check 2 ${{ matrix.environment }} ${{ matrix.cloudfront-id }}
+        run: |
+          matrix='${{ needs.build-matrix.outputs.cloudfront-ids }}'
           echo $matrix
           echo $matrix | jq .
