@@ -12,15 +12,12 @@ jobs:
     name: build-matrix
     runs-on: ubuntu-latest
     outputs:
-      environments: ${{ steps.get-env.outputs.environments }}
+      environments: ${{ steps.get-envs.outputs.environments }}
     steps:
       - name: Concat Cloudfront ids
         id: get-envs
         run: |
-          matrix1='[{"environment": "sandbox", "parm1": "aaaaa"}, {"environment": "prod", "param1": "bbbbbb"}]'
-          matrix2='${{ inputs.cfids }}'
-          JSON=$(echo $matrix1 $matrix2 | jq -s '[ add | group_by(.environment)[] | select(length > 1) | add ]')
-          echo $JSON
+          JSON=$(echo '[{"environment": "sandbox", "parm1": "aaaaa"}, {"environment": "prod", "param1": "bbbbbb"}]' '${{ inputs.cfids }}' | jq -s '[ add | group_by(.environment)[] | select(length > 1) | add ]')
           echo "::set-output name=environments::${JSON}"
 
   check-matrix:
