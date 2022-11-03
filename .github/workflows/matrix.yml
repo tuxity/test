@@ -13,24 +13,31 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       environments: ${{ steps.get-envs.outputs.environments }}
+      cloudfront-ids: ${{ steps.cloudfront-ids-env.outputs.cloudfront-ids }}
     steps:
       - name: Concat Cloudfront ids
         id: get-envs
         run: |
+          JSON=$(echo '[{"environment": "sandbox", "parm1": "aaaaa"}, {"environment": "prod", "param1": "bbbbbb"}]')
+          echo "environments=$JSON"
+          echo "environments=$JSON" >> $GITHUB_OUTPUT
+      - name: Concat Cloudfront ids
+        id: cloudfront-ids-env
+        run: |
           JSON=$(echo '[{"environment": "sandbox", "parm1": "aaaaa"}, {"environment": "prod", "param1": "bbbbbb"}]' '${{ inputs.cfids }}' | jq -c -s '[ add | group_by(.environment)[] | select(length > 1) | add ]' )
-          echo $JSON
-          echo "environments={\"include\": $JSON}"
-          echo "environments={\"include\": $JSON}" >> $GITHUB_OUTPUT
-          echo $GITHUB_OUTPUT
+          echo "cloudfront-ids=$JSON"
+          echo "cloudfront-ids=$JSON" >> $GITHUB_OUTPUT
 
   check-matrix:
     name: check-matrix
     runs-on: ubuntu-latest
     needs: build-matrix
     strategy:
-      matrix: ${{ fromJson(needs.build-matrix.outputs.environments) }}
+      matrix: 
+        environments: ${{ fromJson(needs.build-matrix.outputs.environments) }}
+        includes: ${{ fromJson(needs.build-matrix.outputs.cloudfront-ids) }}
     steps:
-      - name: Check matrix definition
+      - name: Check ${{ matrix.cloudfront-id }} ${{ matrix.cloudfront-id }}
         run: |
           matrix='${{ needs.build-matrix.outputs.environments }}'
           echo $matrix
