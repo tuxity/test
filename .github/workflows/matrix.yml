@@ -18,8 +18,9 @@ jobs:
         id: get-envs
         run: |
           matrix1='[{"environment": "sandbox", "parm1": "aaaaa"}, {"environment": "prod", "param1": "bbbbbb"}]'
-          matrix2='${{ inputs.cloudfront-ids }}'
+          matrix2='${{ inputs.cfids }}'
           JSON=$(echo $matrix1 $matrix2 | jq -s '[ add | group_by(.environment)[] | select(length > 1) | add ]')
+          echo $JSON
           echo "::set-output name=environments::${JSON}"
 
   check-matrix:
