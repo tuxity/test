@@ -6,13 +6,31 @@ on:
       cfids:
         description: "include array"
         default: '[{"environment": "sandbox", "cloudfront-id": "xxxxxxxxxx"}]'
-jobs:
 
-  job2:
+jobs:
+  build-matrix:
+    name: build-matrix
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        environment: [prod, sandbox]
-        include: ${{ fromJSON(inputs.cfids) }}
+    outputs:
+      environments: ${{ steps.get-env.outputs.environments }}
     steps:
-      - run: echo ${{ matrix.cloudfront-id }}
+      - name: Concat Cloudfront ids
+        id: get-envs
+        run: |
+          matrix1='[{"environment": "sandbox", "parm1": "aaaaa"}, {"environment": "prod", "param1": "bbbbbb"}]'
+          matrix2='${{ inputs.cloudfront-ids }}'
+          JSON=$(echo $matrix1 $matrix2 | jq -s '[ add | group_by(.environment)[] | select(length > 1) | add ]')
+          echo "::set-output name=environments::${JSON}"
+
+  check-matrix:
+    name: check-matrix
+    runs-on: ubuntu-latest
+    needs: build-matrix
+    strategy:
+      matrix: ${{ fromJson(needs.build-matrix.outputs.environments) }}
+    steps:
+      - name: Check matrix definition
+        run: |
+          matrix='${{ needs.build-matrix.outputs.environments }}'
+          echo $matrix
+          echo $matrix | jq .
