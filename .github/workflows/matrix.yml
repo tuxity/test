@@ -18,9 +18,9 @@ jobs:
         id: get-envs
         run: |
           JSON=$(echo '[{"environment": "sandbox", "parm1": "aaaaa"}, {"environment": "prod", "param1": "bbbbbb"}]' '${{ inputs.cfids }}' | jq -s '[ add | group_by(.environment)[] | select(length > 1) | add ]')
-          echo >>>
+          echo '>>>'
           echo $JSON
-          echo <<<<
+          echo '<<<'
           echo "environments=${JSON}" >> $GITHUB_OUTPUT
 
   check-matrix:
