@@ -34,17 +34,14 @@ jobs:
     needs: build-matrix
     strategy:
       matrix: 
-        environments: ${{ fromJson(needs.build-matrix.outputs.environments) }}
+        environment: ${{ fromJson(needs.build-matrix.outputs.environments) }}
         includes: ${{ fromJson(needs.build-matrix.outputs.cloudfront-ids) }}
     steps:
-      - name: Check 1 ${{ matrix.environment}} ${{ matrix.cloudfront-id }}
+      - name: Check 1
         run: |
           matrix='${{ needs.build-matrix.outputs.environments }}'
           echo $matrix
           echo $matrix | jq .
-
-      - name: Check 2 ${{ matrix.environment }} ${{ matrix.cloudfront-id }}
-        run: |
           matrix='${{ needs.build-matrix.outputs.cloudfront-ids }}'
           echo $matrix
           echo $matrix | jq .
