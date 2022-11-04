@@ -5,7 +5,7 @@ on:
     inputs:
       cfids:
         description: "include array"
-        default: '[{"environment": "sandbox", "cloudfront-id": "xxxxxxxxxx"}]'
+        default: '[{"environment": "dev", "cloudfront-id": "aaaaa"}, {"environment": "stage", "cloudfront-id": "bbbbb"}, {"environment": "sandbox", "cloudfront-id": "ccccc"}, {"environment": "prod", "cloudfront-id": "ddddd"}]'
 
 jobs:
   build-matrix:
@@ -18,13 +18,13 @@ jobs:
       - name: Ennvironment
         id: get-envs
         run: |
-          JSON=$(echo '[{"environment": "sandbox", "parm1": "aaaaa"}, {"environment": "prod", "param1": "bbbbbb"}]')
+          JSON=$(echo '["sandbox", "prod"]')
           echo "environments=$JSON"
           echo "environments=$JSON" >> $GITHUB_OUTPUT
       - name: Concat Cloudfront ids
         id: cloudfront-ids-env
         run: |
-          JSON=$(echo '[{"environment": "sandbox", "parm1": "aaaaa"}, {"environment": "prod", "param1": "bbbbbb"}]' '${{ inputs.cfids }}' | jq -c -s '[ add | group_by(.environment)[] | select(length > 1) | add ]' )
+          JSON=$(echo '${{ inputs.cfids }}' | jq -c --argjson keys "${{ steps.get-envs.outputs.environments }}" 'map(select([.environment] | inside($keys)))' )
           echo "cloudfront-ids=$JSON"
           echo "cloudfront-ids=$JSON" >> $GITHUB_OUTPUT
 
