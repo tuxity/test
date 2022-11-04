@@ -45,6 +45,6 @@ jobs:
           matrix='${{ needs.build-matrix.outputs.cloudfront-ids }}'
           echo $matrix
           echo $matrix | jq .
-          matrix='${{ matrix }}'
+          matrix='${{ toJSON(matrix) }}'
           echo $matrix
           echo $matrix | jq .
