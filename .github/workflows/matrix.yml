@@ -24,7 +24,7 @@ jobs:
       - name: Concat Cloudfront ids
         id: cloudfront-ids-env
         run: |
-          JSON=$(echo '${{ inputs.cfids }}' | jq -c --argjson keys "${{ steps.get-envs.outputs.environments }}" 'map(select([.environment] | inside($keys)))' )
+          JSON=$(echo '${{ inputs.cfids }}' | jq -c --argjson keys '${{ steps.get-envs.outputs.environments }}' 'map(select([.environment] | inside($keys)))')
           echo "cloudfront-ids=$JSON"
           echo "cloudfront-ids=$JSON" >> $GITHUB_OUTPUT
 
