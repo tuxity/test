@@ -34,12 +34,8 @@ jobs:
     needs: build-matrix
     strategy:
       matrix: 
-        environment: ["sandbox", "prod"]
-        include:
-          - environment: "sandbox"
-            cloudfront-id: "ccccc"
-          - environment: "prod"
-            cloudfront-id: "ddddd"
+        environment: ${{ fromJson(needs.build-matrix.outputs.environments) }}
+        include: ${{ fromJson(needs.build-matrix.outputs.cloudfront-ids) }}
     steps:
       - name: Check 1
         run: |
