@@ -35,7 +35,7 @@ jobs:
     strategy:
       matrix: 
         environment: ["sandbox", "prod"]
-        includes:
+        include:
           - environment: "sandbox"
             cloudfront-id: "ccccc"
           - environment: "prod"
