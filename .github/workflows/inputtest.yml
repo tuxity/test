@@ -12,9 +12,13 @@ on:
       template:
         description: "template to use"
         default: '{0}-{1}-{2}'
+      aws-role:
+        description: 'test'
+        type: string
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - run: echo ${{ format(inputs.template, inputs.myorg, 'stage', inputs.myapp) }}
+      - run: echo ${{ inputs.aws-role || 'awsroleisempty' }}
