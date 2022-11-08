@@ -1,0 +1,14 @@
+name: Test gha
+description: ''
+
+inputs:
+  myinput:
+    required: true
+    description: ''
+
+runs:
+  using: composite
+  steps:
+    - name: test run
+      shell: bash
+      run: echo ${{ inputs.myinput }}
