@@ -11,4 +11,4 @@ jobs:
     name: Print input
     runs-on: ubuntu-latest
     steps:
-      - run: echo ${{ inputs.myinput && format('arn:aws:iam::{0}:role/{1}', secrets[fromJson(inputs.myinput)[0]], fromJson(inputs.myinput)[1]) || 'elseinput' }}
+      - run: echo ${{ inputs.myinput && format('arn:aws:iam::{0}:role/{1}', secrets.fromJson(inputs.myinput)[0], fromJson(inputs.myinput)[1]) || 'elseinput' }}
