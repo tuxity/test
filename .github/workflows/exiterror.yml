@@ -1,0 +1,13 @@
+name: 'Hello World'
+
+push:
+  branches:
+    - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: exitcode
+      run: ${{ github.action_path }}/goodbye.sh
+      shell: bash
