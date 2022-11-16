@@ -10,5 +10,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: exitcode
-      run: ${{ github.action_path }}/goodbye.sh
+      run: ./goodbye.sh
       shell: bash
